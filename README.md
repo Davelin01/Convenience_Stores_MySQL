@@ -458,8 +458,7 @@ order by sum(EXT_SLS_AMT) desc;
 
 🔹 Tobacco products like MARLBORO BOX and NEWPORT 100'S show consistent revenue through regular purchases.
 
-###  ⓹ By analyzing the total sales quantity of product categories, we identify the top-selling product categories to optimize inventory management and marketing strategies. Below are the top 3 product categories ranked by
-sales quantity.
+###  ⓹ By analyzing the total sales quantity of product categories, we identify the top-selling product categories to optimize inventory management and marketing strategies. Below are the top 3 product categories ranked by sales quantity.
 
 ``` SQL
 select ProductCategory.ProductCategoryDesc, sum(storesales.SLS_QTY)
