@@ -2,8 +2,7 @@
 This project involves designing a MySQL database for a chain of convenience stores, aimed at tracking sales data and generating business insights to support decision-making.
 
 ## 🏗️ Database Schema
-Logical Data Model
-The logical data model for the StoreMaster database is represented by the Entity-Relationship (ER) diagram below. It illustrates the entities (tables), their attributes, primary keys, and the relationships between them, ensuring data integrity and efficiency.
+### Logical Data Model
 
 🔹Create a structured and normalized relational database for tracking products, sales, inventory, stores, and employees.
 
