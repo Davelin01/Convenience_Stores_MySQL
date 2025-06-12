@@ -1,4 +1,4 @@
-# MySQL Database Design & Sales Analysis for Convenience Stores
+# Database Designs and Sales Data Analytics for Convenience Stores in MySQL
 
 📌 Overview
 This project involves designing a MySQL database for a chain of convenience stores and conducting sales data analysis to support decision-making and operational insights.
