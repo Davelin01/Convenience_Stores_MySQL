@@ -415,7 +415,7 @@ order by sum(SLS_QTY) asc;
 
 🔹 These products may be suffering from low demand, customer dissatisfaction, or data integrity issues.
 
-## ⓷ By analyzing customer purchase frequency, we identify the customers with the highest purchase counts to design more effective customer management strategies, enhance customer loyalty, and increase sales. Below are the top 10 customers with the highest purchase frequency.
+###  ⓷ By analyzing customer purchase frequency, we identify the customers with the highest purchase counts to design more effective customer management strategies, enhance customer loyalty, and increase sales. Below are the top 10 customers with the highest purchase frequency.
 
 ``` SQL
 SELECT
@@ -440,7 +440,7 @@ LIMIT 10;
 🔹 Use this list to prioritize customer service and retention efforts.
 
 
-## ⓸  By analyzing the total sales amount of products, we identify the top-selling products to optimize inventory management and focus marketing efforts. Below are the top 3 products with the highest sales amounts.
+### ⓸  By analyzing the total sales amount of products, we identify the top-selling products to optimize inventory management and focus marketing efforts. Below are the top 3 products with the highest sales amounts.
 
 ``` SQL
 select ProductDescription, sum(EXT_SLS_AMT)
@@ -458,7 +458,7 @@ order by sum(EXT_SLS_AMT) desc;
 
 🔹 Tobacco products like MARLBORO BOX and NEWPORT 100'S show consistent revenue through regular purchases.
 
-## ⓹ By analyzing the total sales quantity of product categories, we identify the top-selling product categories to optimize inventory management and marketing strategies. Below are the top 3 product categories ranked by
+###  ⓹ By analyzing the total sales quantity of product categories, we identify the top-selling product categories to optimize inventory management and marketing strategies. Below are the top 3 product categories ranked by
 sales quantity.
 
 ``` SQL
