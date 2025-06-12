@@ -1,3 +1,4 @@
 # Database Design for 12 Eleven Convenience Stores (MySQL)
 
-![image](https://github.com/user-attachments/assets/8db30231-4be6-43ed-b94f-c2a07e2eb001)
+![image](https://github.com/user-attachments/assets/2a46601f-084f-453a-9d64-991475ec631d)
+
