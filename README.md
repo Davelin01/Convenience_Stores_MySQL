@@ -6,6 +6,7 @@ This project involves designing a MySQL database for a chain of convenience stor
 🏗️ **Database Design**
     Objectives
     🔹Create a structured and normalized relational database for tracking products, sales, inventory, stores, and employees.
+    
     🔹Ensure scalability and efficient querying for business intelligence.  
    ERD (Entity-Relationship Diagram)
 
