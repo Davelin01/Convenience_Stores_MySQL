@@ -1,10 +1,4 @@
-# Database Designs and Sales Data Analytics for Convenience Stores in MySQL
-
-
-
-
-## 📌 Project Overview
-
+# 🚀 Database Designs and Sales Data Analytics for Convenience Stores in MySQL
 This project involves designing a MySQL database for a chain of convenience stores, aimed at tracking sales data and generating business insights to support decision-making.
 
 ## 🏗️ Database Schema
@@ -16,12 +10,12 @@ The logical data model for the StoreMaster database is represented by the Entity
 🔹Ensure scalability and efficient querying for business intelligence.  
 
 
-  🔍 **ERD (Entity-Relationship Diagram)**
+ ### ERD (Entity-Relationship Diagram)
    
 ![image](https://github.com/user-attachments/assets/2a46601f-084f-453a-9d64-991475ec631d)
 
 
-The following SQL CREATE TABLE statements were used to define the schema:
+### The following SQL CREATE TABLE statements were used to define the schema:
 ```SQL
 -- Use specified schema
 CREATE SCHEMA IF NOT EXISTS `6_12eleven`;
@@ -132,9 +126,9 @@ CREATE INDEX fk_ProductGrp_ProductSubCategory_idx ON ProductGrp (ProductSubCateg
 
 ## 💻 Data Loading and Cleaning
 
-Run SQL commands to display the data from each of the tables.
+We ran SQL commands to display the data from each table after loading it from CSV files using the LOAD DATA INFILE command. To make sure the data was clean and ready, we first used temporary tables to load and clean everything before inserting it into the final tables. 
 
-Data was loaded from CSV files using LOAD DATA INFILE commands. A temporary table strategy was employed for initial loading and cleaning before inserting into the final tables. This process involved extensive data cleaning and transformation to address various issues identified in the raw data.
+During this process, we had to do quite a bit of data cleaning and transformation to fix problems in the raw data.
 
 ``` SQL
 CREATE TEMPORARY TABLE TempStoreMaster LIKE StoreMaster;
@@ -277,8 +271,7 @@ FROM
 StoreSales
 LEFT JOIN
 ProductByGroup ON StoreSales.PROD_NBR = ProductByGroup.PROD_NBR;
-```sql
--- Image: image_52acb4.png
+
 -- Table Customer
 INSERT INTO Customer (Customerphone, CustomerCreditCard, CreatedOn, Changedon)
 SELECT DISTINCT
@@ -288,288 +281,203 @@ COALESCE(NULLIF(@CreatedOn, ''), CURDATE()),
 COALESCE(NULLIF(@Changedon, ''), CURDATE())
 FROM
 StoreSales;
+
+--Table SalesOrderHeader
+INSERT INTO SalesOrderHeader ( SalesOrderID , SalesItem , SalesDate , StoreID , Customer ID , CreatedOn , Changedon)
+
+SELECT
+  StoreSales.SalesOrder ,
+  StoreSales.SalesItem ,
+  StoreSales.OrderDate ,
+  StoreSales.StoreNo ,
+  Customer.CustomerID ,
+  COALESCE(NULLIF ( @ CreatedOn , ' ' ) , CURDATE ( ) ) ,
+  COALESCE(NULLIF ( @ Changedon , ' ' ) , CURDATE ( ) )
+FROM
+  StoreSales
+LEFT JOIN
+Customer ON StoreSales.CustomerCreditCard Customer.CustomerCreditCard
+
+
+--Table SalesOrderItem
+
+INSERT INTO SalesOrderItem ( SalesOrderID , ItemNo , Qty , TotalSale , CreatedOn , Changedon , ProductID )
+
+SELECT
+  StoreSales . SalesOrder ,
+  StoreSales.SalesItem ,
+  StoreSales.SLS_QTY ,
+  StoreSales.EXT_SLS_AMT ,
+  COALESCE(NULLIF ( @ CreatedOn , ' ' ) , CURDATE ( ) ) ,
+  COALESCE(NULLIF ( @ Changedon , " ) , CURDATE ( ) ) ,
+  Product.ProductID
+FROM
+  StoreSales
+JOIN
+  Product ON StoreSales . PROD_NBR Product.Productnumber AND StoreSales . UnitPrice Product . UnitPrice ;                  
+
+
 ```
+ ### 🔍Results showing the data and the total number of entries from each table
+
+Storemaster table:
+
+![image](https://github.com/user-attachments/assets/fca7fd48-878d-48f3-9ad6-50f5f2020dca)
+
+![image](https://github.com/user-attachments/assets/553c09c5-ae2e-4a16-9ddc-5e4bfb208937)
 
 
-Data Cleaning Challenges and Solutions
-The raw Excel data received from the franchise was indeed "dirty" and posed several challenges:
 
-Negative Values in Sales Data: SLS_QTY and EXT_SLS_AMT fields contained illogical negative values. These were handled during the data loading process, likely by setting them to zero or excluding them, though the exact SQL for this specific fix isn't shown in the provided snippets.
+Salesorderheader:
 
-Date Format Issues: Dates in the dataset were not compatible with MySQL. The COALESCE(NULLIF(@column, ''), CURDATE()) function was used to handle missing or incorrectly formatted dates by converting them to the current date if invalid.
+![image](https://github.com/user-attachments/assets/157674e2-9a2f-4db7-9912-4657be95f129)
 
-Null or Missing Values in Critical Fields: Columns that should not have nulls were missing data. COALESCE was used to replace nulls with default values (e.g., CURDATE() for dates, or 0000/9999 for specific IDs).
+![image](https://github.com/user-attachments/assets/6a754ecf-18c9-49f2-9f71-4e11d62545b7)
 
-Duplicate Records: Identified and addressed during the loading and INSERT DISTINCT processes to prevent data inflation.
 
-Inconsistent Product Information: Some PROD_NBR had different descriptions, and identical descriptions were tied to multiple product numbers. This was a challenge in establishing unique product identifiers and was mitigated by careful joins and data mapping during product table population.
+Customer:
 
-Incorrect Data Types: IDs or quantities were stored as text. CASE statements and IF conditions were used to convert these to appropriate numeric types (INT, BIGINT).
+![image](https://github.com/user-attachments/assets/2fd66bfa-cc06-4cda-8348-d60876819113)
 
-Data Beyond Expected Ranges: Certain ID fields exceeded INT limitations. These were converted to BIGINT to accommodate larger values. Credit card numbers were also stored as VARCHAR to prevent scientific notation conversion and data loss.
+![image](https://github.com/user-attachments/assets/227f3235-2d71-44c5-9c6d-52d3e39f218d)
 
-5. SQL Queries and Business Analytics
-SQL queries were developed to extract meaningful insights and support business critical decisions.
+Product:
 
-Data Verification Queries (Counts)
-Counts of entries in each table were performed to verify data integrity after loading:
+![image](https://github.com/user-attachments/assets/d2cb608a-e3c8-4b13-8288-effe1c5de8e7)
 
-Table
+![image](https://github.com/user-attachments/assets/70ac68ec-d73b-4810-8284-81a82c1e08f3)
 
-Count
+SalesOrderItem:
 
-SQL Query
+![image](https://github.com/user-attachments/assets/e34c0b65-d69d-41a7-86b3-0672e9b6a35c)
 
-Customer
 
-9015
+![image](https://github.com/user-attachments/assets/ae37ac5e-1c04-4555-a2fa-4b5dc94a9780)
 
-SELECT COUNT(*) AS NumberOfEntries FROM Customer;
+Productgrp:
 
-MajorProductCategory
+![image](https://github.com/user-attachments/assets/58796596-5d4d-4c9d-b9a4-9960c7976de5)
 
-24
+![image](https://github.com/user-attachments/assets/4dc4d7f6-cffe-40f2-95f9-fb0a135ec082)
 
-SELECT COUNT(*) AS NumberOfEntries FROM MajorProductCategory;
 
-Product
+MajorProductCategory:
 
-4196
+![image](https://github.com/user-attachments/assets/f765a857-d474-435e-b46c-2ef0ad410721)
 
-SELECT COUNT(*) AS NumberOfEntries FROM Product;
+![image](https://github.com/user-attachments/assets/95308451-fae2-49b5-9d63-0f214c9c46d9)
 
-ProductCategory
+ProductCategory:
 
-92
+![image](https://github.com/user-attachments/assets/5d486ee1-a456-4b02-a2b2-198151e46e2a)
 
-SELECT COUNT(*) AS NumberOfEntries FROM ProductCategory;
 
-ProductGrp
+![image](https://github.com/user-attachments/assets/4b54eab9-8c85-4348-92f3-8eaf6532cf31)
 
-62
+ProductSubCategory:
 
-SELECT COUNT(*) AS NumberOfEntries FROM ProductGrp;
+![image](https://github.com/user-attachments/assets/a93d5d68-00ba-46c4-9d8e-e93638969928)
 
-ProductSubCategory
 
-62
+![image](https://github.com/user-attachments/assets/f0f6ca0b-8559-41e5-8ef0-2ac71b4edd1f)
 
-SELECT COUNT(*) AS NumberOfEntries FROM ProductSubCategory;
 
-SalesOrderHeader
+## 💡 SQL Queries and Business Analytics
+### ⓵ Rrecommend top three specific products should always have in stock.
 
-28042
+``` SQL
+select ProductDescription, sum(SLS_QTY)
+from storesales
+group by ProductDescription
+order by sum(SLS_QTY) desc;
+```
+![image](https://github.com/user-attachments/assets/eecae107-d79c-4a97-acd8-e34f6623cd25)
+### 🧠 Business Insights
 
-SELECT COUNT(*) AS NumberOfEntries FROM SalesOrderHeader;
+🔹 These products have the highest sales volume, indicating consistent customer demand.
 
-SalesOrderItem
+🔹 CARD BRTHDAY CROWN is a strong performer in both quantity and revenue.
 
-28042
+🔹 MIDWEST FASTENER's high quantity suggests recurring or utility-based purchases.
 
-SELECT COUNT(*) AS NumberOfEntries FROM SalesOrderItem;
+### ⓶ Recommend the top three products, in descending priority, that should be eliminated.
 
-StoreMaster
+``` SQL
+select ProductDescription, sum(SLS_QTY)
+from storesales
+group by ProductDescription
+order by sum(SLS_QTY) asc;
+```
+![image](https://github.com/user-attachments/assets/bf0dab10-4ed9-4324-b867-8a0a3eb33816)
+### 🧠 Business Insights
 
-72
+🔹 All listed products have net negative quantities sold, meaning they were returned more than purchased, or had inventory adjustments that reduced total sales.
 
-SELECT COUNT(*) AS NumberOfEntries FROM StoreMaster;
+🔹 These products may be suffering from low demand, customer dissatisfaction, or data integrity issues.
 
-Business Critical Decisions and Analytics
-A. Top Products to Always Have in Stock (Descending Priority)
-Recommendation: Stores in the "SOUTH" region should prioritize stocking these top-selling products by quantity.
+## ⓷ By analyzing customer purchase frequency, we identify the customers with the highest purchase counts to design more effective customer management strategies, enhance customer loyalty, and increase sales. Below are the top 10 customers with the highest purchase frequency.
 
-SELECT ProductDescription, SUM(SLS_QTY) AS TotalQuantitySold
-FROM storesales
-GROUP BY ProductDescription
-ORDER BY SUM(SLS_QTY) DESC
-LIMIT 3;
-
-Results:
-| ProductDescription | TotalQuantitySold |
-| :----------------- | :---------------- |
-| MIDWEST EASTENER   | 361               |
-| CARO BIRTHDAY CROWN| 356               |
-| IBOCOMBO           | 320               |
-
-B. Top Products to Consider Not Carrying (Descending Priority for Elimination)
-Recommendation: Stores in the "SOUTH" region should consider eliminating these products due to very low sales volume.
-
-SELECT ProductDescription, SUM(SLS_QTY) AS TotalQuantitySold
-FROM storesales
-GROUP BY ProductDescription
-ORDER BY SUM(SLS_QTY) ASC
-LIMIT 3;
-
-Results:
-| ProductDescription             | TotalQuantitySold |
-| :----------------------------- | :---------------- |
-| KOI LIGHTLY CANDY BAG SIE CHOCLMINT 17.5 OZ | 3                 |
-| ARROW ROLL ON REGULAR 1.75 OZ  | 3                 |
-| LINDEMAN'S WINE BASE           | 3                 |
-
-C. Additional Business Critical Decisions
-Top Customers by Purchase Frequency
-Recommendation: Identify and engage these high-frequency customers with loyalty programs and targeted marketing campaigns to enhance retention.
-
-SELECT c.CustomerID, COUNT(DISTINCT soh.SalesOrderID) AS PurchaseCount
-FROM Customer c
-LEFT JOIN SalesOrderHeader soh ON c.CustomerID = soh.CustomerID
+``` SQL
+SELECT
+    c.CustomerID,
+    COUNT(DISTINCT soh.SalesOrderID) AS PurchaseCount
+FROM customer c
+LEFT JOIN salesorderheader soh ON c.CustomerID = soh.CustomerID
 GROUP BY c.CustomerID
 ORDER BY PurchaseCount DESC
 LIMIT 10;
+```
+![image](https://github.com/user-attachments/assets/486eea09-be74-4333-aeab-b39fe7f3193a)
 
-Results:
-| CustomerID | PurchaseCount |
-| :--------- | :------------ |
-| 466        | 42            |
-| 358        | 39            |
-| 379        | 38            |
-| 442        | 37            |
-| 497        | 36            |
-| 305        | 34            |
-| 330        | 32            |
-| 454        | 32            |
-| 443        | 32            |
-| 186        | 32            |
+### 🧠 Business Insights
 
-Top-Selling Products by Total Sales Amount
-Recommendation: Optimize inventory and marketing efforts around these high-revenue products.
+🔹 Customer 486 is the most active, making 42 purchases.
 
-SELECT ProductDescription, SUM(EXT_SLS_AMT) AS TotalSalesAmount
-FROM storesales
-GROUP BY ProductDescription
-ORDER BY SUM(EXT_SLS_AMT) DESC
-LIMIT 3;
+🔹 Customers in the 30+ purchase range likely represent the store's most loyal and engaged users.
 
-Results:
-| ProductDescription | TotalSalesAmount |
-| :----------------- | :--------------- |
-| CARO BIRTHDAY CROWN| 2195.49          |
-| MANBORO BOX        | 1389.98          |
-| NEWPORT WINE       | 1494.48          |
+🔹 These high-frequency customers are ideal candidates for rewards, personalized promotions, or VIP programs.
 
-Top-Selling Product Categories by Sales Quantity
-Recommendation: Focus on product categories that drive high sales volume for inventory management and broad marketing strategies.
-
-SELECT pc.ProductCategoryDesc, SUM(ss.SLS_QTY) AS TotalCategoryQuantitySold
-FROM storesales ss
-LEFT JOIN product p ON ss.PROD_NBR = p.Productnumber
-LEFT JOIN productgrp pg ON p.ProductGrpID = pg.ProductGrpID
-LEFT JOIN productsubcategory psc ON pg.ProductSubCategoryID = psc.ProductSubCategoryID
-LEFT JOIN productcategory pc ON psc.ProductCategoryID = pc.ProductCategoryID
-GROUP BY pc.ProductCategoryDesc
-ORDER BY SUM(ss.SLS_QTY) DESC
-LIMIT 3;
-
-Results:
-| ProductCategoryDesc | TotalCategoryQuantitySold |
-| :------------------ | :------------------------ |
-| COLD & ALLERGY      | 64394                     |
-| CONVENIENCE         | 25985                     |
-| SMOKING & CRAFTS    | 18030                     |
-
-6. Project Summary
-6.1. Project Timeline
-Project Initiation and Data Preparation (11.10 - 11.12)
-
-EER Diagram Creation: Analyzed dataset to design the ER diagram.
-
-CSV Splitting: Divided main CSV into normalized files.
-
-Table Creation: Created tables with CREATE TABLE scripts, including temporary table logic for cleaning.
-
-Database Import and Verification Phase (11.13 - 11.15)
-
-11.13: Imported basic tables (MajorProductCategory, ProductCategory), performed initial integrity checks and foreign key testing.
-
-11.14 - 11.15: Imported remaining tables (StoreSales), implemented dynamic field conversion (e.g., COALESCE, CASE), verified foreign key constraints, ran JOIN queries, and used SELECT COUNT(*) for data validation.
-
-SQL Query Development and Business Analysis Phase (11.16 - 11.19)
-
-Developed queries for inventory recommendations (top/bottom sales).
-
-Developed analytical queries for product categories, customers, and revenue sources.
-
-Generated business recommendations based on query results (inventory optimization, loyalty programs, promotion adjustments).
-
-Final Inspection and Report Preparation Phase (11.20 - 11.21)
-
-11.20: Collated query results, updated documentation (final ERD, physical design).
-
-11.21: Completed project summary report (business analysis, suggestions), and prepared presentation materials.
-
-6.2. Dirty Data Indications
-Several indications of dirty data were encountered in the Excel dataset:
-
-Negative Values: Sales quantity (SLS_QTY) and amount (EXT_SLS_AMT) fields contained negative values, which are logically impossible.
-
-Date Format Issues: Inconsistent and incompatible date formats that required conversion for MySQL.
-
-Null or Missing Values: Critical fields that should not have nulls contained missing data, violating primary key and data integrity principles.
-
-Duplicate Records: Presence of identical rows potentially inflating sales or inventory figures.
-
-Inconsistent Product Information:
-
-Same product numbers (PROD_NBR) associated with different descriptions.
-
-Identical descriptions associated with multiple product numbers.
-
-Incorrect Data Types: IDs or quantities stored as text, necessitating type conversion for proper operations.
-
-Data Beyond Expected Ranges: Some ID fields exceeded typical integer data type limits (e.g., credit card numbers converted to scientific notation), requiring BIGINT or VARCHAR types.
-
-6.3. Loading Regional Sales Data
-To load sales data specifically for our region ("SOUTH"), a WHERE clause was used during the insertion process from the temporary table to the final StoreMaster table:
-
-INSERT INTO StoreMaster
-SELECT * FROM TempStoreMaster
-WHERE Region = 'SOUTH';
-
-This ensured that only relevant regional data was populated into the database.
-
-6.4. Foreseen Challenges in Future Projects
-In a later industry database conversion project, several challenges might be faced that were not fully encountered here:
-
-Data Format Issues (Advanced): Beyond simple date conversions, complex or highly varied data formats (e.g., JSON blobs in CSVs, non-standard delimiters, nested structures) would require more sophisticated parsing and transformation tools (ETL pipelines) rather than simple LOAD DATA INFILE and SQL functions. Credit card number scientific notation conversion was an early indicator of this.
-
-Duplicate Data (Complex Scenarios): While duplicates were handled, large-scale industrial systems might have subtle duplicates arising from data synchronization issues, delayed transactions, or mergers, requiring advanced deduplication algorithms and business rules.
-
-Foreign Key Integrity (Distributed Systems): Maintaining foreign key integrity across distributed databases or microservices would be significantly more challenging than in a single relational database. It would require distributed transaction management, eventual consistency models, or stricter application-level enforcement.
-
-Schema Evolution: In an evolving system, managing schema changes (e.g., adding columns, modifying data types, refactoring tables) without downtime or data loss would be a major challenge.
-
-Performance at Scale: Handling petabytes of data and millions of transactions per second would necessitate different database technologies (NoSQL, data warehouses), indexing strategies, and query optimization techniques.
-
-6.5. Top Two Project Takeaways
-Data Cleaning and Normalization Are Critical for Ensuring Database Integrity:
-Thorough data cleaning and normalization (to 3NF) are foundational for any industrial-strength database. Issues like negative values, inconsistent product information, and null entries directly impact query accuracy and analytical processes. Proper constraints (primary and foreign keys) are essential for data consistency and redundancy reduction.
-
-Iterative Design and Testing Reduce Errors in Large-Scale Database Projects:
-An iterative approach to database design, building, and testing each table proved invaluable. Validating the data model, testing connections with JOIN queries, and verifying data counts early helped identify and resolve potential issues (incorrect relationships, missing data) proactively. This step-by-step methodology ensures a robust design and reduces the high cost of failure in complex, large-scale database projects.
+🔹 Use this list to prioritize customer service and retention efforts.
 
 
+## ⓸  By analyzing the total sales amount of products, we identify the top-selling products to optimize inventory management and focus marketing efforts. Below are the top 3 products with the highest sales amounts.
 
+``` SQL
+select ProductDescription, sum(EXT_SLS_AMT)
+from storesales
+group by ProductDescription
+order by sum(EXT_SLS_AMT) desc;
+```
+![image](https://github.com/user-attachments/assets/178eb131-874a-4829-9259-82604ee3f9b0)
 
-Table of Contents
-1. Project Overview
+### 🧠 Business Insights
 
-2. Logical Data Model
+🔹 These products generate the highest sales revenue and are essential to overall profitability.
 
-3. Database Schema
+🔹 CARD BRTHDAY CROWN likely has a higher unit price, making it a top revenue item even with lower volume.
 
-4. Data Loading and Cleaning
+🔹 Tobacco products like MARLBORO BOX and NEWPORT 100'S show consistent revenue through regular purchases.
 
-5. SQL Queries and Business Analytics
+## ⓹ By analyzing the total sales quantity of product categories, we identify the top-selling product categories to optimize inventory management and marketing strategies. Below are the top 3 product categories ranked by
+sales quantity.
 
-6. Project Summary
+``` SQL
+select ProductCategory.ProductCategoryDesc, sum(storesales.SLS_QTY)
+from storesales
+left join product on storesales.PROD_NBR = product.Productnumber
+left join productgrp on product.ProductGrpID = productgrp.ProductGrpID
+left join productsubcategory on productgrp.ProductsubcategoryID = productsubcategory.ProductsubcategoryID
+left join productcategory on productsubcategory.ProductcategoryID = productcategory.ProductcategoryID
+group by ProductCategory.ProductCategoryDesc
+order by sum(storesales.SLS_QTY) desc;
+```
+![image](https://github.com/user-attachments/assets/ba8c72ab-c67c-4c58-94ac-9b36c63f03bd)
 
-6.1. Project Timeline
+### 🧠 Business Insights
 
-6.2. Dirty Data Indications
+🔹 COLD & ALLERGY leads all categories in total quantity sold, indicating consistent demand.
 
-6.3. Loading Regional Sales Data
+🔹 CONFECTIONS performs strongly, likely due to its broad consumer appeal and frequent purchases.
 
-6.4. Foreseen Challenges in Future Projects
+🔹 SEWING & CRAFTS ranking third suggests a niche but high-engagement customer base.
 
-6.5. Top Two Project Takeaways
