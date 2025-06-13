@@ -159,7 +159,7 @@ LIMIT 3;
 
 **Business Insights**
 - **COLD & ALLERGY** is the highest-selling category by a significant margin. Prioritize inventory and promotions here for steady turnover.
-- **CONFECTIONS** is a reliably popular impulse-buy and repeat-purchase category. Keep shelves well-stocked and consider seasonal promotions.
+- **CONFECTIONS** is a reliably popular impulse-buy and repeat-purchase category. We should keep shelves well-stocked and consider seasonal promotions.
 - **SEWING & CRAFTS** shows unexpectedly high engagement and has potential for niche marketing, community events, or further product expansion.
 
 ---
